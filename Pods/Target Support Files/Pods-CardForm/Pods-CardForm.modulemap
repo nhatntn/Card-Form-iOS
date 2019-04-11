@@ -1,0 +1,6 @@
+module Pods_CardForm {
+  umbrella header "Pods-CardForm-umbrella.h"
+
+  export *
+  module * { export * }
+}
