@@ -1,15 +1,15 @@
 //
-//  ZPFloatingTextField.swift
+//  ZPFloatingDateTextField.swift
 //  CardForm
 //
-//  Created by nhatnt on 4/10/19.
+//  Created by nhatnt on 4/15/19.
 //  Copyright © 2019 nhatnt. All rights reserved.
 //
 
 import UIKit
 import SnapKit
 
-@IBDesignable class ZPFloatingTextField: UIView {
+@IBDesignable class ZPFloatingDateTextField: UIView {
     
     //MARK: Properties
     @IBInspectable var titleColor : UIColor = UIColor.white {
@@ -64,7 +64,7 @@ import SnapKit
         super.init(coder: aDecoder)
         self.setupSubviews()
     }
-
+    
     // MARK: TextField actions
     
     
@@ -76,12 +76,13 @@ import SnapKit
         
         self.inputTextField.text = self.placeholderText
         self.inputTextField.textColor = self.placeholderColor
+        self.inputTextField.textAlignment = .center
         self.inputTextField.delegate = self
     }
     
 }
 
-extension ZPFloatingTextField: UITextFieldDelegate {
+extension ZPFloatingDateTextField: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField.textColor == UIColor.lightGray {
             textField.text = nil
