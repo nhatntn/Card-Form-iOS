@@ -15,7 +15,9 @@
 		D22BBBB6225F44B1006566CE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D22BBBB4225F44B1006566CE /* LaunchScreen.storyboard */; };
 		D22BBBBF225F450F006566CE /* ZPFloatingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22BBBBD225F450F006566CE /* ZPFloatingTextField.swift */; };
 		D22BBBC0225F450F006566CE /* ZPFloatingCardTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22BBBBE225F450F006566CE /* ZPFloatingCardTextField.swift */; };
+		D24C44952264E380009874C3 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D24C44942264E380009874C3 /* Utils.swift */; };
 		D26851F422645C6A0038851A /* ZPFloatingDateTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D26851F322645C6A0038851A /* ZPFloatingDateTextField.swift */; };
+		D2D4F6B522670FE500B79146 /* ZPLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D4F6B422670FE500B79146 /* ZPLineView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,7 +31,9 @@
 		D22BBBB7225F44B1006566CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D22BBBBD225F450F006566CE /* ZPFloatingTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZPFloatingTextField.swift; sourceTree = "<group>"; };
 		D22BBBBE225F450F006566CE /* ZPFloatingCardTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZPFloatingCardTextField.swift; sourceTree = "<group>"; };
+		D24C44942264E380009874C3 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		D26851F322645C6A0038851A /* ZPFloatingDateTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZPFloatingDateTextField.swift; sourceTree = "<group>"; };
+		D2D4F6B422670FE500B79146 /* ZPLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZPLineView.swift; sourceTree = "<group>"; };
 		D386527C22F3C2F45E6CAC4D /* libPods-CardForm.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CardForm.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E71E0EC9CAEFF361E55D95CB /* Pods-CardForm.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CardForm.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CardForm/Pods-CardForm.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,12 +91,14 @@
 				D22BBBBE225F450F006566CE /* ZPFloatingCardTextField.swift */,
 				D22BBBBD225F450F006566CE /* ZPFloatingTextField.swift */,
 				D26851F322645C6A0038851A /* ZPFloatingDateTextField.swift */,
+				D2D4F6B422670FE500B79146 /* ZPLineView.swift */,
 				D22BBBAB225F44AF006566CE /* AppDelegate.swift */,
 				D22BBBAD225F44AF006566CE /* ViewController.swift */,
 				D22BBBAF225F44AF006566CE /* Main.storyboard */,
 				D22BBBB2225F44B1006566CE /* Assets.xcassets */,
 				D22BBBB4225F44B1006566CE /* LaunchScreen.storyboard */,
 				D22BBBB7225F44B1006566CE /* Info.plist */,
+				D24C44942264E380009874C3 /* Utils.swift */,
 			);
 			path = CardForm;
 			sourceTree = "<group>";
@@ -197,8 +203,10 @@
 				D22BBBAE225F44AF006566CE /* ViewController.swift in Sources */,
 				D26851F422645C6A0038851A /* ZPFloatingDateTextField.swift in Sources */,
 				D22BBBC0225F450F006566CE /* ZPFloatingCardTextField.swift in Sources */,
+				D2D4F6B522670FE500B79146 /* ZPLineView.swift in Sources */,
 				D22BBBAC225F44AF006566CE /* AppDelegate.swift in Sources */,
 				D22BBBBF225F450F006566CE /* ZPFloatingTextField.swift in Sources */,
+				D24C44952264E380009874C3 /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

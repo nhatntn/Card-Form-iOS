@@ -35,7 +35,6 @@ struct InputField {
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         self.addSubview(label)
-        label.backgroundColor = .red
         label.snp.makeConstraints {
             $0.leading.equalToSuperview()
             $0.top.equalToSuperview()
@@ -54,11 +53,6 @@ struct InputField {
             setupSubviews()
         }
     }
-    @IBInspectable var spacing: CGFloat = 8.0 {
-        didSet {
-            setupSubviews()
-        }
-    }
     
     @IBInspectable var highlightColor : UIColor = UIColor.yellow {
         didSet {
@@ -66,6 +60,8 @@ struct InputField {
         }
     }
     
+    let spacing: CGFloat = valueScaled(18.0)
+        
     //MARK: Initialization
     
     override init(frame: CGRect) {
@@ -77,11 +73,7 @@ struct InputField {
         super.init(coder: aDecoder)
         self.setupSubviews()
     }
-    
-    // MARK: TextField actions
-    
-    
-    
+
     //MARK: Private Methods
     
     private func setupSubviews() {
@@ -99,18 +91,24 @@ struct InputField {
         
         self.titleLabel.text = self.title
         self.titleLabel.textColor = self.titleColor
+        self.titleLabel.font = UIFont.systemFont(ofSize: fontSizeScaled(10.0))
         
         let numberOfFields = self.cardDigits % 4 == 0 ? self.cardDigits / 4 : self.cardDigits / 4 + 1
-        let widthSuperView = self.frame.width
-        let widthLabel = (widthSuperView - spacing * CGFloat(numberOfFields - 1))/CGFloat(numberOfFields)
-        
         for i in 0 ..< numberOfFields {
             // Create the field
             let label = UILabel()
-            label.backgroundColor = .blue
             label.textAlignment = .center
             label.textColor = self.placeholderColor
+            label.font = UIFont.systemFont(ofSize: fontSizeScaled(18.0))
             
+            //Make the width of label to fit the text inside
+            let maxLength = self.cardDigits % 4 != 0 && i == numberOfFields - 1 ? self.cardDigits % 4 : 4
+            let placeHolderText = String(repeating: self.characterPlaceholder, count: maxLength)
+            label.text = placeHolderText
+            
+            label.addTextSpacing(spacing / 6)
+            let widthLabel = placeHolderText.size(withAttributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: fontSizeScaled(25.0))]).width
+
             // Add the textfield to the view
             addSubview(label)
             
@@ -118,14 +116,14 @@ struct InputField {
             label.snp.makeConstraints {
                 $0.width.equalTo(widthLabel)
                 $0.height.equalToSuperview().multipliedBy(0.6)
-                $0.bottom.equalToSuperview().offset(-4)
+                $0.bottom.equalToSuperview().offset(valueScaled(-8))
                 if self.inputFields.isEmpty {
                     $0.left.equalToSuperview()
                 } else {
                     let seperateLabel = UILabel()
                     seperateLabel.text = "-"
                     seperateLabel.adjustsFontSizeToFitWidth = true
-                    seperateLabel.font = UIFont.systemFont(ofSize: 25.0)
+                    seperateLabel.font = UIFont.systemFont(ofSize: fontSizeScaled(22.0))
                     seperateLabel.textAlignment = .center
                     seperateLabel.textColor = .white
                     self.addSubview(seperateLabel)
@@ -133,18 +131,19 @@ struct InputField {
                         $0.left.equalTo(inputFields[i-1].label.snp.right)
                         $0.width.equalTo(spacing)
                         $0.height.equalTo(label.snp.height)
-                        $0.bottom.equalToSuperview().offset(-4)
+                        $0.bottom.equalToSuperview().offset(valueScaled(-8))
                     }
                     
                     $0.left.equalTo(seperateLabel.snp.right)
                 }
             }
             
-            // Add the new textfield to the input textfield array
-            let maxLength = self.cardDigits % 4 != 0 && i == numberOfFields - 1 ? self.cardDigits % 4 : 4
-            label.text = String(repeating: self.characterPlaceholder, count: maxLength)
-            label.addTextSpacing(spacing / 10)
+            let line = ZPLineView()
+            line.backgroundColor = self.titleColor
+            label.addSubview(line)
+            line.alignToBottom()
             
+            // Add the new textfield to the input textfield array
             self.inputFields.append(InputField(label: label, maxLength: maxLength))
         }
         
@@ -153,6 +152,8 @@ struct InputField {
         inputTextField.backgroundColor = .clear
         inputTextField.textColor = .clear
         inputTextField.tintColor = .clear
+        inputTextField.keyboardType = .numberPad
+        
         inputTextField.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalToSuperview().multipliedBy(0.6)
@@ -165,7 +166,17 @@ struct InputField {
 }
 
 extension ZPFloatingCardNumberField: UITextFieldDelegate {
+    //Prevent user's action: select, copy, paste, ...
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        return false
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        //Limit the user's input to numbers
+        if string.rangeOfCharacter(from: CharacterSet.decimalDigits) == nil && !string.isEmpty {
+            return false
+        }
+        
         //Always set cursor position to the end
         let newPosition = textField.endOfDocument
         textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
@@ -174,6 +185,7 @@ extension ZPFloatingCardNumberField: UITextFieldDelegate {
         guard let textFieldText = textField.text, let rangeOfTextToReplace = Range(range, in: textFieldText) else {
             return false
         }
+        
         let subStringToReplace = textFieldText[rangeOfTextToReplace]
         let count = textFieldText.count - subStringToReplace.count + string.count
         
@@ -190,7 +202,9 @@ extension ZPFloatingCardNumberField: UITextFieldDelegate {
 
         for i in 0..<labelComponents.count {
             self.inputFields[i].label.text = labelComponents[i]
-            self.inputFields[i].label.addTextSpacing(spacing / 10)
+            self.inputFields[i].label.addTextSpacing(spacing / 6)
+            
+            //Find current cursor index
             var count = 0
             self.inputFields.enumerated().forEach { (index, element) in
                 if index < i {
@@ -200,20 +214,23 @@ extension ZPFloatingCardNumberField: UITextFieldDelegate {
             let theNewestCharacterCurrentLabelIndex = theNewestCharacterIndex - count
             let maxLengthCurrentLabel = self.inputFields[i].maxLength
             
+            //Change color the previous characters
             if theNewestCharacterCurrentLabelIndex > self.inputFields[i].maxLength - 1 {
                 let nsRange = NSRange.init(location: 0, length: maxLengthCurrentLabel)
                 let mutableString = NSMutableAttributedString(string: labelComponents[i])
                 mutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: self.titleColor, range: nsRange)
-                mutableString.addAttribute(NSAttributedString.Key.kern, value: spacing / 10, range: NSRange(location: 0, length: labelComponents[i].count))
+                mutableString.addAttribute(NSAttributedString.Key.kern, value: spacing / 6, range: NSRange(location: 0, length: labelComponents[i].count))
                 self.inputFields[i].label.attributedText = mutableString
-            } else if theNewestCharacterCurrentLabelIndex >= 0 {
+            }
+            //Highlight color the newest character
+            else if theNewestCharacterCurrentLabelIndex >= 0 {
                 let nsRangeFocus = NSRange.init(location: theNewestCharacterCurrentLabelIndex, length: 1)
                 let nsRangeHighlight = NSRange.init(location: 0, length: theNewestCharacterCurrentLabelIndex)
                 
                 let mutableString = NSMutableAttributedString(string: labelComponents[i])
                 mutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: self.highlightColor, range: nsRangeFocus)
                 mutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: self.titleColor, range: nsRangeHighlight)
-                mutableString.addAttribute(NSAttributedString.Key.kern, value: spacing / 10, range: NSRange(location: 0, length: labelComponents[i].count))
+                mutableString.addAttribute(NSAttributedString.Key.kern, value: spacing / 6, range: NSRange(location: 0, length: labelComponents[i].count))
                 self.inputFields[i].label.attributedText = mutableString
             }
         }
