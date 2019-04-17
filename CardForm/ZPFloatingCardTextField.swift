@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 struct InputField {
     let label: UILabel
@@ -61,7 +62,8 @@ struct InputField {
     }
     
     let spacing: CGFloat = valueScaled(18.0)
-        
+//    let variableEditStatus = Variable(<#Element#>)
+    
     //MARK: Initialization
     
     override init(frame: CGRect) {
@@ -217,9 +219,11 @@ extension ZPFloatingCardNumberField: UITextFieldDelegate {
             //Change color the previous characters
             if theNewestCharacterCurrentLabelIndex > self.inputFields[i].maxLength - 1 {
                 let nsRange = NSRange.init(location: 0, length: maxLengthCurrentLabel)
+                
                 let mutableString = NSMutableAttributedString(string: labelComponents[i])
                 mutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: self.titleColor, range: nsRange)
                 mutableString.addAttribute(NSAttributedString.Key.kern, value: spacing / 6, range: NSRange(location: 0, length: labelComponents[i].count))
+                
                 self.inputFields[i].label.attributedText = mutableString
             }
             //Highlight color the newest character
@@ -231,6 +235,7 @@ extension ZPFloatingCardNumberField: UITextFieldDelegate {
                 mutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: self.highlightColor, range: nsRangeFocus)
                 mutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: self.titleColor, range: nsRangeHighlight)
                 mutableString.addAttribute(NSAttributedString.Key.kern, value: spacing / 6, range: NSRange(location: 0, length: labelComponents[i].count))
+                
                 self.inputFields[i].label.attributedText = mutableString
             }
         }
@@ -249,11 +254,6 @@ extension String {
         }
         
         return results.map { String($0) }
-    }
-    
-    func substring(with nsrange: NSRange) -> Substring? {
-        guard let range = Range(nsrange, in: self) else { return nil }
-        return self[range]
     }
 }
 
