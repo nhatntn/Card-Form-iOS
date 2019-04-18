@@ -20,9 +20,13 @@ class ViewController: UIViewController {
        
         self.cardNumberView.inputTextField.rx.controlEvent([.editingDidEnd]).asObservable()
             .subscribe(onNext: { [weak self] (_) in
-                self?.cardNameView.inputTextField.becomeFirstResponder()
+                self?.cardNumberView.notification.value = .init(message: nil, status: .valid)
             }).disposed(by: self.disposeBag)
         
-12    }
+        self.cardNumberView.inputTextField.rx.controlEvent([.editingDidBegin]).asObservable()
+            .subscribe(onNext: { [weak self] (_) in
+                self?.cardNumberView.notification.value = .init(message: "Thẻ không hợp lệ", status: .invalid)
+            }).disposed(by: self.disposeBag)
+      }
 }
 

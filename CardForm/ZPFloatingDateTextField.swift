@@ -9,70 +9,16 @@
 import UIKit
 import SnapKit
 
-@IBDesignable class ZPFloatingDateTextField: UIView {
-    
-    //MARK: Properties
-    @IBInspectable var titleColor : UIColor = UIColor.white {
-        didSet {
-            setupSubviews()
-        }
-    }
-    @IBInspectable var title : String = "" {
-        didSet {
-            setupSubviews()
-        }
-    }
-    @IBInspectable var placeholderColor : UIColor = UIColor.lightGray {
-        didSet {
-            setupSubviews()
-        }
-    }
-    @IBInspectable var placeholderText : String = "" {
-        didSet {
-            setupSubviews()
+@IBDesignable class ZPFloatingDateTextField: ZPFloatingBaseTextField {
+    override var titleAlignment: NSTextAlignment {
+        get {
+            return .center
         }
     }
     
-    lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        self.addSubview(label)
-        label.textAlignment = .center
-        label.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.top.equalToSuperview()
-        }
-        return label
-    }()
-    lazy var inputTextField: UITextField = {
-        let textField = UITextField()
-        self.addSubview(textField)
-        textField.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview().offset(valueScaled(-8))
-            $0.height.equalToSuperview().multipliedBy(0.5)
-        }
-        return textField
-    }()
-    
-    //MARK: Initialization
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setupSubviews()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setupSubviews()
-    }
-    
-    // MARK: TextField actions
-    
-    
-    //MARK: Private Methods
-    
-    private func setupSubviews() {
+    override func setupSubviews() {
         self.titleLabel.text = self.title
+        self.titleLabel.textAlignment = .center
         self.titleLabel.textColor = self.titleColor
         self.titleLabel.font = UIFont.systemFont(ofSize: fontSizeScaled(10.0))
         
@@ -91,11 +37,10 @@ import SnapKit
             $0.bottom.equalToSuperview()
             $0.centerX.equalToSuperview()
         }
+        
+//        self.setupNotification()
     }
     
-}
-
-extension ZPFloatingDateTextField: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField.textColor == UIColor.lightGray {
             textField.text = nil

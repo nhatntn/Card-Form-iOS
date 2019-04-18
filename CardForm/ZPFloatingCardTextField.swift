@@ -16,40 +16,18 @@ struct InputField {
     let maxLength: Int
 }
 
-@IBDesignable class ZPFloatingCardNumberField: UIView {
+@IBDesignable class ZPFloatingCardNumberField: ZPFloatingBaseTextField {
     //MARK: Properties
+    
+    private var inputFields = [InputField]()
+    private let spacing: CGFloat = valueScaled(18.0)
+    
     @IBInspectable var cardDigits : Int = 16 {
         didSet {
             setupSubviews()
         }
     }
     
-    @IBInspectable var titleColor : UIColor = UIColor.white {
-        didSet {
-            setupSubviews()
-        }
-    }
-    @IBInspectable var title : String = "" {
-        didSet {
-            setupSubviews()
-        }
-    }
-    lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        self.addSubview(label)
-        label.snp.makeConstraints {
-            $0.leading.equalToSuperview()
-            $0.top.equalToSuperview()
-        }
-        return label
-    }()
-    
-    private var inputFields = [InputField]()
-    @IBInspectable var placeholderColor : UIColor = UIColor.lightGray {
-        didSet {
-            setupSubviews()
-        }
-    }
     @IBInspectable var characterPlaceholder : String = "X" {
         didSet {
             setupSubviews()
@@ -62,24 +40,8 @@ struct InputField {
         }
     }
     
-    let spacing: CGFloat = valueScaled(18.0)
-    let inputTextField = UITextField()
-    
-    //MARK: Initialization
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setupSubviews()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setupSubviews()
-    }
-
     //MARK: Private Methods
-    
-    private func setupSubviews() {
+    override func setupSubviews() {
         // Clear any existing textfields
         for field in inputFields {
             field.label.removeFromSuperview()
@@ -119,7 +81,7 @@ struct InputField {
             label.snp.makeConstraints {
                 $0.width.equalTo(widthLabel)
                 $0.height.equalToSuperview().multipliedBy(0.6)
-                $0.bottom.equalToSuperview().offset(valueScaled(-8))
+                $0.bottom.equalToSuperview().offset(valueScaled(-4))
                 if self.inputFields.isEmpty {
                     $0.left.equalToSuperview()
                 } else {
@@ -134,7 +96,7 @@ struct InputField {
                         $0.left.equalTo(inputFields[i-1].label.snp.right)
                         $0.width.equalTo(spacing)
                         $0.height.equalTo(label.snp.height)
-                        $0.bottom.equalToSuperview().offset(valueScaled(-8))
+                        $0.bottom.equalToSuperview().offset(valueScaled(-4))
                     }
                     
                     $0.left.equalTo(seperateLabel.snp.right)
@@ -163,8 +125,11 @@ struct InputField {
         }
         inputTextField.delegate = self
         inputTextField.addTarget(self, action: #selector(ZPFloatingCardNumberField.textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
+        
+        self.setupNotification()
     }
     
+    //MARK: TextField Delegate
     private func highlightEnteredCharacters(in text: String, length: Int) -> NSMutableAttributedString {
         let nsRange = NSRange.init(location: 0, length: length)
         
@@ -186,9 +151,7 @@ struct InputField {
         
         return mutableString
     }
-}
 
-extension ZPFloatingCardNumberField: UITextFieldDelegate {
     //Prevent user's action: select, copy, paste, ...
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return false

@@ -19,10 +19,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iVq-zs-Eua" customClass="ZPFloatingCardNumberField" customModule="CardForm" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="20" width="350" height="40"/>
+                                <rect key="frame" x="0.0" y="20" width="350" height="60"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="MEm-qM-222"/>
+                                    <constraint firstAttribute="height" constant="60" id="MEm-qM-222"/>
                                     <constraint firstAttribute="width" constant="350" id="NyM-ai-kGD"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -37,10 +37,10 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qUA-zo-fdR" customClass="ZPFloatingTextField" customModule="CardForm" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="60" width="235" height="40"/>
+                                <rect key="frame" x="0.0" y="80" width="235" height="60"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="fdJ-j0-3Fe"/>
+                                    <constraint firstAttribute="height" constant="60" id="fdJ-j0-3Fe"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="TÊN CHỦ THẺ"/>
@@ -48,10 +48,10 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nil-3I-HpI" customClass="ZPFloatingDateTextField" customModule="CardForm" customModuleProvider="target">
-                                <rect key="frame" x="235" y="60" width="140" height="40"/>
+                                <rect key="frame" x="235" y="80" width="140" height="60"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="cKS-Bt-nLD"/>
+                                    <constraint firstAttribute="height" constant="60" id="cKS-Bt-nLD"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="NGÀY PHÁT HÀNH"/>
