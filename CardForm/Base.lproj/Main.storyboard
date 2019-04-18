@@ -37,21 +37,21 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qUA-zo-fdR" customClass="ZPFloatingTextField" customModule="CardForm" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="60" width="235" height="60"/>
+                                <rect key="frame" x="0.0" y="60" width="235" height="40"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="fdJ-j0-3Fe"/>
+                                    <constraint firstAttribute="height" constant="40" id="fdJ-j0-3Fe"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Họ và Tên"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="TÊN CHỦ THẺ"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="placeholderText" value="Nhập Họ và Tên"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nil-3I-HpI" customClass="ZPFloatingDateTextField" customModule="CardForm" customModuleProvider="target">
-                                <rect key="frame" x="235" y="60" width="140" height="60"/>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <rect key="frame" x="235" y="60" width="140" height="40"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="cKS-Bt-nLD"/>
+                                    <constraint firstAttribute="height" constant="40" id="cKS-Bt-nLD"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="NGÀY PHÁT HÀNH"/>
@@ -59,7 +59,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                         <constraints>
                             <constraint firstItem="nil-3I-HpI" firstAttribute="width" secondItem="iVq-zs-Eua" secondAttribute="width" multiplier="0.4" id="0iL-41-1u7"/>
                             <constraint firstItem="nil-3I-HpI" firstAttribute="top" secondItem="iVq-zs-Eua" secondAttribute="bottom" id="2Td-1G-FNx"/>
@@ -72,6 +72,11 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="cardExpireDateView" destination="nil-3I-HpI" id="EDG-KB-Psh"/>
+                        <outlet property="cardNameView" destination="qUA-zo-fdR" id="0zL-aW-NYs"/>
+                        <outlet property="cardNumberView" destination="iVq-zs-Eua" id="3GE-WB-w4g"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

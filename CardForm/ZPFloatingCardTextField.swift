@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import RxSwift
+import RxCocoa
 
 struct InputField {
     let label: UILabel
@@ -62,7 +63,7 @@ struct InputField {
     }
     
     let spacing: CGFloat = valueScaled(18.0)
-//    let variableEditStatus = Variable(<#Element#>)
+    let inputTextField = UITextField()
     
     //MARK: Initialization
     
@@ -149,7 +150,6 @@ struct InputField {
             self.inputFields.append(InputField(label: label, maxLength: maxLength))
         }
         
-        let inputTextField = UITextField()
         self.addSubview(inputTextField)
         inputTextField.backgroundColor = .clear
         inputTextField.textColor = .clear
@@ -165,12 +165,67 @@ struct InputField {
         inputTextField.addTarget(self, action: #selector(ZPFloatingCardNumberField.textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
     }
     
+    private func highlightEnteredCharacters(in text: String, length: Int) -> NSMutableAttributedString {
+        let nsRange = NSRange.init(location: 0, length: length)
+        
+        let mutableString = NSMutableAttributedString(string: text)
+        mutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: self.titleColor, range: nsRange)
+        mutableString.addAttribute(NSAttributedString.Key.kern, value: spacing / 6, range: NSRange(location: 0, length: text.count))
+        
+        return mutableString
+    }
+    
+    private func highlightTheNewestCharacter(in text: String, characterIndex: Int) -> NSMutableAttributedString {
+        let nsRangeFocus = NSRange.init(location: characterIndex, length: 1)
+        let nsRangeHighlight = NSRange.init(location: 0, length: characterIndex)
+        
+        let mutableString = NSMutableAttributedString(string: text)
+        mutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: self.highlightColor, range: nsRangeFocus)
+        mutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: self.titleColor, range: nsRangeHighlight)
+        mutableString.addAttribute(NSAttributedString.Key.kern, value: spacing / 6, range: NSRange(location: 0, length: text.count))
+        
+        return mutableString
+    }
 }
 
 extension ZPFloatingCardNumberField: UITextFieldDelegate {
     //Prevent user's action: select, copy, paste, ...
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return false
+    }
+    
+    func getTheLastEnteredField() -> InputField? {
+        return self.inputFields.first (where: { (field) -> Bool in
+            guard let text = field.label.text else {
+                return false
+            }
+            let countEnteredCharacter = text.filter { String($0) != self.characterPlaceholder }.count
+            return countEnteredCharacter < field.maxLength && countEnteredCharacter > 0
+        }) ?? self.inputFields.last(where: { (field) -> Bool in
+            guard let text = field.label.text else {
+                return false
+            }
+            return !text.contains(self.characterPlaceholder)
+        })
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        guard let lastEnteredField = self.getTheLastEnteredField(), let lastEnterdFieldText = lastEnteredField.label.text else {
+            return
+        }
+        let theNewestCharacterIndex = lastEnterdFieldText.filter{ String($0) != self.characterPlaceholder }.count - 1
+        let mutableString = self.highlightTheNewestCharacter(in: lastEnterdFieldText, characterIndex: theNewestCharacterIndex)
+        lastEnteredField.label.attributedText = mutableString
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        guard let lastedEnteredField = self.getTheLastEnteredField(), let text = lastedEnteredField.label.text else {
+            return
+        }
+        
+        let length = text.filter{ String($0) != self.characterPlaceholder }.count
+        let mutableString = self.highlightEnteredCharacters(in: text, length: length)
+        lastedEnteredField.label.attributedText = mutableString
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -191,7 +246,12 @@ extension ZPFloatingCardNumberField: UITextFieldDelegate {
         let subStringToReplace = textFieldText[rangeOfTextToReplace]
         let count = textFieldText.count - subStringToReplace.count + string.count
         
-        return count <= self.cardDigits
+        //BecomeFirstResponder the next input view
+        if count > self.cardDigits {
+            textField.resignFirstResponder()
+            return false
+        }
+        return true
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
@@ -207,35 +267,24 @@ extension ZPFloatingCardNumberField: UITextFieldDelegate {
             self.inputFields[i].label.addTextSpacing(spacing / 6)
             
             //Find current cursor index
-            var count = 0
+            var countEnteredCharecters = 0
             self.inputFields.enumerated().forEach { (index, element) in
                 if index < i {
-                    count += element.maxLength
+                    countEnteredCharecters += element.maxLength
                 }
             }
-            let theNewestCharacterCurrentLabelIndex = theNewestCharacterIndex - count
+            let theNewestCharacterCurrentLabelIndex = theNewestCharacterIndex - countEnteredCharecters
             let maxLengthCurrentLabel = self.inputFields[i].maxLength
             
             //Change color the previous characters
             if theNewestCharacterCurrentLabelIndex > self.inputFields[i].maxLength - 1 {
-                let nsRange = NSRange.init(location: 0, length: maxLengthCurrentLabel)
-                
-                let mutableString = NSMutableAttributedString(string: labelComponents[i])
-                mutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: self.titleColor, range: nsRange)
-                mutableString.addAttribute(NSAttributedString.Key.kern, value: spacing / 6, range: NSRange(location: 0, length: labelComponents[i].count))
-                
+                let mutableString = self.highlightEnteredCharacters(in: labelComponents[i], length: maxLengthCurrentLabel)
                 self.inputFields[i].label.attributedText = mutableString
             }
+                
             //Highlight color the newest character
             else if theNewestCharacterCurrentLabelIndex >= 0 {
-                let nsRangeFocus = NSRange.init(location: theNewestCharacterCurrentLabelIndex, length: 1)
-                let nsRangeHighlight = NSRange.init(location: 0, length: theNewestCharacterCurrentLabelIndex)
-                
-                let mutableString = NSMutableAttributedString(string: labelComponents[i])
-                mutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: self.highlightColor, range: nsRangeFocus)
-                mutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: self.titleColor, range: nsRangeHighlight)
-                mutableString.addAttribute(NSAttributedString.Key.kern, value: spacing / 6, range: NSRange(location: 0, length: labelComponents[i].count))
-                
+                let mutableString = self.highlightTheNewestCharacter(in: labelComponents[i], characterIndex: theNewestCharacterCurrentLabelIndex)
                 self.inputFields[i].label.attributedText = mutableString
             }
         }

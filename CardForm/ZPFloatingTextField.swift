@@ -45,9 +45,10 @@ import SnapKit
     lazy var inputTextField: UITextField = {
         let textField = UITextField()
         self.addSubview(textField)
+        textField.font = UIFont.systemFont(ofSize: fontSizeScaled(18.0))
         textField.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview().offset(-4)
+            $0.bottom.equalToSuperview().offset(valueScaled(-8))
             $0.height.equalToSuperview().multipliedBy(0.5)
         }
         return textField
@@ -65,18 +66,21 @@ import SnapKit
         self.setupSubviews()
     }
 
-    // MARK: TextField actions
-    
-    
     //MARK: Private Methods
     
     private func setupSubviews() {
         self.titleLabel.text = self.title
         self.titleLabel.textColor = self.titleColor
+        self.titleLabel.font = UIFont.systemFont(ofSize: fontSizeScaled(10.0))
         
         self.inputTextField.text = self.placeholderText
         self.inputTextField.textColor = self.placeholderColor
         self.inputTextField.delegate = self
+        
+        let line = ZPLineView()
+        line.backgroundColor = self.titleColor
+        self.addSubview(line)
+        line.alignToBottom()
     }
     
 }
@@ -97,6 +101,23 @@ extension ZPFloatingTextField: UITextFieldDelegate {
             textField.text = self.placeholderText
             textField.textColor = UIColor.lightGray
         }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        //Limit the user's input to letters
+        let characterSet = CharacterSet.letters.union(CharacterSet.init(charactersIn: " "))
+        if string.rangeOfCharacter(from: characterSet) == nil && !string.isEmpty {
+            return false
+        }
+        
+        let currentText = textField.text ?? ""
+        var newText = ""
+        if range.location <= currentText.count, let textRange = Range(range, in: currentText) {
+            newText = currentText.replacingCharacters(in: textRange, with: string)
+        }
+        
+        textField.text = newText.uppercased()
+        return false
     }
 }
 
