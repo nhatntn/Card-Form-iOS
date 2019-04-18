@@ -38,7 +38,7 @@ import SnapKit
             $0.centerX.equalToSuperview()
         }
         
-//        self.setupNotification()
+        self.setupNotification()
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {

@@ -111,7 +111,12 @@ class ZPFloatingBaseTextField: UIView, UITextFieldDelegate {
                     } else {
                         $0.width.equalToSuperview()
                     }
-                    $0.leading.top.equalToSuperview()
+                    if self.titleAlignment == .center {
+                        $0.centerX.equalToSuperview()
+                    } else {
+                        $0.leading.equalToSuperview()
+                    }
+                    $0.top.equalToSuperview()
                     $0.height.equalToSuperview().multipliedBy(0.4)
                 }
                 self.titleLabel.textColor = .red

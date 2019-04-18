@@ -18,14 +18,14 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        self.cardNumberView.inputTextField.rx.controlEvent([.editingDidEnd]).asObservable()
+        self.cardExpireDateView.inputTextField.rx.controlEvent([.editingDidEnd]).asObservable()
             .subscribe(onNext: { [weak self] (_) in
-                self?.cardNumberView.notification.value = .init(message: nil, status: .valid)
+                self?.cardExpireDateView.notification.value = .init(message: nil, status: .valid)
             }).disposed(by: self.disposeBag)
         
-        self.cardNumberView.inputTextField.rx.controlEvent([.editingDidBegin]).asObservable()
+        self.cardExpireDateView.inputTextField.rx.controlEvent([.editingDidBegin]).asObservable()
             .subscribe(onNext: { [weak self] (_) in
-                self?.cardNumberView.notification.value = .init(message: "Thẻ không hợp lệ", status: .invalid)
+                self?.cardExpireDateView.notification.value = .init(message: "Thẻ không hợp lệ", status: .invalid)
             }).disposed(by: self.disposeBag)
       }
 }
